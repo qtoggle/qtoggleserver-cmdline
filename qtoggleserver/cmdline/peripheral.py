@@ -24,7 +24,7 @@ class CommandLine(polled.PolledPeripheral):
         self,
         *,
         output_regexp: Optional[str] = None,
-        read_command: str,
+        read_command: Optional[str] = None,
         write_command: Optional[str] = None,
         ports: List[Dict[str, Any]] = None,
         port: Dict[str, Any] = None,
@@ -35,7 +35,7 @@ class CommandLine(polled.PolledPeripheral):
         super().__init__(**kwargs)
 
         self._output_regexp: Optional[re.Pattern] = None
-        self._read_command: str = read_command
+        self._read_command: Optional[str] = read_command
         self._write_command: Optional[str] = write_command
         self._port_details: List[Dict[str, Any]] = ports
         self._timeout: int = timeout
@@ -74,6 +74,9 @@ class CommandLine(polled.PolledPeripheral):
         return stdout, p.returncode
 
     async def poll(self) -> None:
+        if not self._read_command:
+            return
+
         output, exit_code = await self.run_command(self._read_command, env=None)
 
         if self._output_regexp:

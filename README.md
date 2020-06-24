@@ -43,6 +43,9 @@ peripherals = [
 
 `name` is an optional name that will be used as a prefix for all ports.
 
+`read_command` sets a command to be executed to determine the value of ports. If this parameter is not specified, no
+polling is done and the values will only be set to what is written to the ports.
+
 If `output_regexp` is specified, output of `read_command` is parsed against it as a regular expression. Following rules
 apply:
 

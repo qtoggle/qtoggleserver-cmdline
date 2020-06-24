@@ -46,7 +46,7 @@ peripherals = [
 If `output_regexp` is specified, output of `read_command` is parsed against it as a regular expression. Following rules
 apply:
 
- * If output does not match the regular expression, all port values will be set to `None`.
+ * If output does not match the regular expression, all port values will be set to `null`.
  * The port values will be determined in order of the indicated groups. If no group is defined, the entire output will
 be used to determine the value of all ports.
  * For boolean ports, text `true` (case-insensitive) or any other non-zero decimal number represents `true`.
@@ -68,5 +68,3 @@ If `write_command` is not specified, all ports will be read-only.
 Use the `timeout` parameter to set a timeout when waiting for the commands to complete, in seconds.
 
 Although using blocking commands will not block the server, it is recommended that you supply commands that don't block.
-The `read_command` and `write_command` will never be executed simultaneously, regardless of how long their execution
-lasts.

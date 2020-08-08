@@ -155,7 +155,7 @@ class CommandLine(polled.PolledPeripheral):
 
         return [{
             'driver': CommandLinePort,
-            'port_id': p['id'],
-            'port_type': p['type'],
+            'id': p['id'],
+            'type': p['type'],
             'writable': self._write_command is not None
         } for p in self._port_details]

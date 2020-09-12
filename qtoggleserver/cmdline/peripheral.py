@@ -139,7 +139,7 @@ class CommandLine(polled.PolledPeripheral):
             else:
                 value = str(value)
 
-            port_id = re.sub('[^a-zA-Z0-9_]', '_', port_id)
+            port_id = re.sub('[^a-zA-Z0-9_-]', '_', port_id)
             env[port_id] = value
 
         _, exit_code = await self.run_command(self._write_command, env=env)

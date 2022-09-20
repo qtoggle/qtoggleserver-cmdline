@@ -3,7 +3,7 @@ import asyncio
 import logging
 import re
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from qtoggleserver.core import ports as core_ports
 from qtoggleserver.core.typing import NullablePortValue, PortValue
@@ -26,8 +26,8 @@ class CommandLine(polled.PolledPeripheral):
         output_regexp: Optional[str] = None,
         read_command: Optional[str] = None,
         write_command: Optional[str] = None,
-        ports: List[Dict[str, Any]] = None,
-        port: Dict[str, Any] = None,
+        ports: list[dict[str, Any]] = None,
+        port: dict[str, Any] = None,
         timeout: int = DEFAULT_TIMEOUT,
         **kwargs
     ) -> None:
@@ -37,7 +37,7 @@ class CommandLine(polled.PolledPeripheral):
         self._output_regexp: Optional[re.Pattern] = None
         self._read_command: Optional[str] = read_command
         self._write_command: Optional[str] = write_command
-        self._port_details: List[Dict[str, Any]] = ports
+        self._port_details: list[dict[str, Any]] = ports
         self._timeout: int = timeout
 
         if port and not ports:
@@ -46,9 +46,9 @@ class CommandLine(polled.PolledPeripheral):
         if output_regexp:
             self._output_regexp = re.compile(output_regexp, re.MULTILINE | re.DOTALL)
 
-        self._values: Dict[str, Optional[float]] = {p['id']: None for p in self._port_details}
+        self._values: dict[str, Optional[float]] = {p['id']: None for p in self._port_details}
 
-    async def run_command(self, cmd: str, env: Optional[Dict[str, str]]) -> Tuple[str, int]:
+    async def run_command(self, cmd: str, env: Optional[dict[str, str]]) -> tuple[str, int]:
         self.debug('executing command "%s"', cmd)
 
         p = await asyncio.create_subprocess_shell(
@@ -150,7 +150,7 @@ class CommandLine(polled.PolledPeripheral):
         # Poll values immediately after writing
         await self.poll()
 
-    async def make_port_args(self) -> List[Dict[str, Any]]:
+    async def make_port_args(self) -> list[dict[str, Any]]:
         from .ports import CommandLinePort
 
         return [{

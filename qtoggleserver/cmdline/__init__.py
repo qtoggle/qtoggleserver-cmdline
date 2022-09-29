@@ -1,4 +1,3 @@
-
 from .peripheral import CommandLine
 
 

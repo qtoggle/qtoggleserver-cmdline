@@ -1,4 +1,3 @@
-
 class CommandLineException(Exception):
     pass
 

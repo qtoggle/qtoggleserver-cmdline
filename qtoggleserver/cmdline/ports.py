@@ -1,4 +1,3 @@
-
 from typing import cast
 
 from qtoggleserver.core.typing import NullablePortValue, PortValue

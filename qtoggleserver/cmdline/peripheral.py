@@ -59,7 +59,6 @@ class CommandLine(polled.PolledPeripheral):
 
         try:
             stdout, stderr = await asyncio.wait_for(p.communicate(), timeout=self._timeout)
-
         except asyncio.TimeoutError:
             raise CommandTimeout()
 
@@ -98,11 +97,9 @@ class CommandLine(polled.PolledPeripheral):
                 g = groups[i].strip().lower()
                 try:
                     value = int(g)
-
                 except ValueError:
                     try:
                         value = float(g)
-
                     except ValueError:
                         value = None
 

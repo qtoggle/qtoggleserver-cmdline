@@ -104,16 +104,14 @@ class CommandLine(polled.PolledPeripheral):
                         value = None
 
                 if (p['type'] == core_ports.TYPE_BOOLEAN) and (value is None):
-                    value = int(g == 'true')  # For boolean ports, text "true" is also accepted
+                    value = int(g == 'true')  # for boolean ports, text "true" is also accepted
 
                 self._values[p['id']] = value
-
         else:
             # When no regexp is given, use exit code
             for i, k in enumerate(self._values):
                 if self._port_details[i]['type'] == core_ports.TYPE_BOOLEAN:
                     self._values[k] = int(not exit_code)  # process exit code 0 means true
-
                 else:
                     self._values[k] = exit_code
 
@@ -122,7 +120,7 @@ class CommandLine(polled.PolledPeripheral):
 
     def update_value(self, port_id: str, value: PortValue) -> None:
         if isinstance(value, bool):
-            value = int(value)  # Keep only int/float values
+            value = int(value)  # keep only int/float values
 
         self._values[port_id] = value
 
@@ -131,7 +129,6 @@ class CommandLine(polled.PolledPeripheral):
         for port_id, value in self._values.items():
             if value is None:
                 value = ''
-
             else:
                 value = str(value)
 

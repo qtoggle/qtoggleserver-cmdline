@@ -1,6 +1,7 @@
 from typing import cast
 
 from qtoggleserver.core.typing import NullablePortValue, PortValue
+from qtoggleserver.core.ports import skip_write_unavailable
 from qtoggleserver.lib import polled
 
 from .peripheral import CommandLine
@@ -16,6 +17,7 @@ class CommandLinePort(polled.PolledPort):
     def get_peripheral(self) -> CommandLine:
         return cast(CommandLine, super().get_peripheral())
 
+    @skip_write_unavailable
     async def write_value(self, value: PortValue) -> None:
         peripheral = self.get_peripheral()
         peripheral.update_value(self.get_initial_id(), value)

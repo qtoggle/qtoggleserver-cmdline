@@ -14,7 +14,7 @@ from .. import cmdline
 
 class CommandLine(polled.PolledPeripheral):
     DEFAULT_POLL_INTERVAL = 10
-    RETRY_POLL_INTERVAL = 5
+    DEFAULT_RETRY_POLL_INTERVAL = 5
     DEFAULT_TIMEOUT = 5
 
     logger = logging.getLogger(cmdline.__name__)

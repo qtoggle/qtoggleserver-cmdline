@@ -1,4 +1,6 @@
 from .peripheral import CommandLine
 
 
-VERSION = 'unknown-version'
+__all__ = ["CommandLine"]
+
+VERSION = "unknown-version"

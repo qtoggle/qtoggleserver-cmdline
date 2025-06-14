@@ -3,4 +3,4 @@ from .peripheral import CommandLine
 
 __all__ = ["CommandLine"]
 
-VERSION = "unknown-version"
+VERSION = "0.0.0"

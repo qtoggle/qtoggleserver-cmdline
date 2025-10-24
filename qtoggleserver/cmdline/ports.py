@@ -1,7 +1,7 @@
 from typing import cast
 
-from qtoggleserver.core.typing import NullablePortValue, PortValue
 from qtoggleserver.core.ports import skip_write_unavailable
+from qtoggleserver.core.typing import NullablePortValue, PortValue
 from qtoggleserver.lib import polled
 
 from .peripheral import CommandLine

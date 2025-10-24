@@ -2,14 +2,14 @@ import asyncio
 import logging
 import re
 
-from typing import Any, Optional
+from typing import Any
 
 from qtoggleserver.core import ports as core_ports
 from qtoggleserver.core.typing import NullablePortValue, PortValue
 from qtoggleserver.lib import polled
 
-from .exceptions import CommandTimeout
 from .. import cmdline
+from .exceptions import CommandTimeout
 
 
 class CommandLine(polled.PolledPeripheral):
@@ -22,20 +22,19 @@ class CommandLine(polled.PolledPeripheral):
     def __init__(
         self,
         *,
-        output_regexp: Optional[str] = None,
-        read_command: Optional[str] = None,
-        write_command: Optional[str] = None,
+        output_regexp: str | None = None,
+        read_command: str | None = None,
+        write_command: str | None = None,
         ports: list[dict[str, Any]] = None,
         port: dict[str, Any] = None,
         timeout: int = DEFAULT_TIMEOUT,
-        **kwargs
+        **kwargs,
     ) -> None:
-
         super().__init__(**kwargs)
 
-        self._output_regexp: Optional[re.Pattern] = None
-        self._read_command: Optional[str] = read_command
-        self._write_command: Optional[str] = write_command
+        self._output_regexp: re.Pattern | None = None
+        self._read_command: str | None = read_command
+        self._write_command: str | None = write_command
         self._port_details: list[dict[str, Any]] = ports
         self._timeout: int = timeout
 
@@ -45,16 +44,13 @@ class CommandLine(polled.PolledPeripheral):
         if output_regexp:
             self._output_regexp = re.compile(output_regexp, re.MULTILINE | re.DOTALL)
 
-        self._values: dict[str, Optional[float]] = {p['id']: None for p in self._port_details}
+        self._values: dict[str, float | None] = {p["id"]: None for p in self._port_details}
 
-    async def run_command(self, cmd: str, env: Optional[dict[str, str]]) -> tuple[str, int]:
+    async def run_command(self, cmd: str, env: dict[str, str] | None) -> tuple[str, int]:
         self.debug('executing command "%s"', cmd)
 
         p = await asyncio.create_subprocess_shell(
-            cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            env=env
+            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, env=env
         )
 
         try:
@@ -64,8 +60,8 @@ class CommandLine(polled.PolledPeripheral):
 
         if stderr:
             stderr = stderr.decode().strip()
-            stderr = stderr.replace('\n', '\\n')
-            self.warning('command returned stderr: %s', stderr)
+            stderr = stderr.replace("\n", "\\n")
+            self.warning("command returned stderr: %s", stderr)
 
         stdout = stdout.decode().strip()
 
@@ -91,7 +87,7 @@ class CommandLine(polled.PolledPeripheral):
                 groups = [output] * len(self._port_details)
 
             while len(groups) < len(self._port_details):
-                groups.append('')
+                groups.append("")
 
             for i, p in enumerate(self._port_details):
                 g = groups[i].strip().lower()
@@ -103,14 +99,14 @@ class CommandLine(polled.PolledPeripheral):
                     except ValueError:
                         value = None
 
-                if (p['type'] == core_ports.TYPE_BOOLEAN) and (value is None):
-                    value = int(g == 'true')  # for boolean ports, text "true" is also accepted
+                if (p["type"] == core_ports.TYPE_BOOLEAN) and (value is None):
+                    value = int(g == "true")  # for boolean ports, text "true" is also accepted
 
-                self._values[p['id']] = value
+                self._values[p["id"]] = value
         else:
             # When no regexp is given, use exit code
             for i, k in enumerate(self._values):
-                if self._port_details[i]['type'] == core_ports.TYPE_BOOLEAN:
+                if self._port_details[i]["type"] == core_ports.TYPE_BOOLEAN:
                     self._values[k] = int(not exit_code)  # process exit code 0 means true
                 else:
                     self._values[k] = exit_code
@@ -128,17 +124,17 @@ class CommandLine(polled.PolledPeripheral):
         env = {}
         for port_id, value in self._values.items():
             if value is None:
-                value = ''
+                value = ""
             else:
                 value = str(value)
 
-            port_id = re.sub('[^a-zA-Z0-9_-]', '_', port_id)
+            port_id = re.sub("[^a-zA-Z0-9_-]", "_", port_id)
             env[port_id] = value
 
         _, exit_code = await self.run_command(self._write_command, env=env)
 
         if exit_code:
-            self.warning('command returned non-zero exit code %d', exit_code)
+            self.warning("command returned non-zero exit code %d", exit_code)
 
         # Poll values immediately after writing
         await self.poll()
@@ -146,9 +142,7 @@ class CommandLine(polled.PolledPeripheral):
     async def make_port_args(self) -> list[dict[str, Any]]:
         from .ports import CommandLinePort
 
-        return [{
-            'driver': CommandLinePort,
-            'id': p['id'],
-            'type': p['type'],
-            'writable': self._write_command is not None
-        } for p in self._port_details]
+        return [
+            {"driver": CommandLinePort, "id": p["id"], "type": p["type"], "writable": self._write_command is not None}
+            for p in self._port_details
+        ]

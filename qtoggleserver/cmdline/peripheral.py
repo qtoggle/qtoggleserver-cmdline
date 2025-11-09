@@ -55,7 +55,7 @@ class CommandLine(polled.PolledPeripheral):
 
         try:
             stdout, stderr = await asyncio.wait_for(p.communicate(), timeout=self._timeout)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             raise CommandTimeout()
 
         if stderr:

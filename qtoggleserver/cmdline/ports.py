@@ -26,4 +26,4 @@ class CommandLinePort(polled.PolledPort):
 
     async def read_value(self) -> NullablePortValue:
         value = self.get_peripheral().get_value(self.get_initial_id())
-        return await self.adapt_value_type(value)
+        return self.adapt_value_type(value)

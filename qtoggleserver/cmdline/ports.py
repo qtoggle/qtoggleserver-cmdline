@@ -9,10 +9,10 @@ from .peripheral import CommandLine
 
 class CommandLinePort(polled.PolledPort):
     def __init__(self, *, id: str, type: str, writable: bool, **kwargs) -> None:
+        super().__init__(id=id, **kwargs)
+
         self._type = type
         self._writable = writable
-
-        super().__init__(id=id, **kwargs)
 
     def get_peripheral(self) -> CommandLine:
         return cast(CommandLine, super().get_peripheral())

@@ -16,6 +16,7 @@ class CommandLine(polled.PolledPeripheral):
     DEFAULT_POLL_INTERVAL = 10
     DEFAULT_RETRY_POLL_INTERVAL = 5
     DEFAULT_TIMEOUT = 5
+    POLL_AFTER_WRITE = True
 
     logger = logging.getLogger(cmdline.__name__)
 
@@ -135,9 +136,6 @@ class CommandLine(polled.PolledPeripheral):
 
         if exit_code:
             self.warning("command returned non-zero exit code %d", exit_code)
-
-        # Poll values immediately after writing
-        await self.poll()
 
     async def make_port_args(self) -> list[dict[str, Any]]:
         from .ports import CommandLinePort

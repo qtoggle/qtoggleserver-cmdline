@@ -26,8 +26,8 @@ class CommandLine(polled.PolledPeripheral):
         output_regexp: str | None = None,
         read_command: str | None = None,
         write_command: str | None = None,
-        ports: list[dict[str, Any]] = None,
-        port: dict[str, Any] = None,
+        ports: list[dict[str, Any]] | None = None,
+        port: dict[str, Any] | None = None,
         timeout: int = DEFAULT_TIMEOUT,
         **kwargs,
     ) -> None:
